@@ -1,9 +1,7 @@
 import express, { Express, Request, Response } from "express";
-import fs from "fs";
-import Video from "./utils/interface/Video/Video";
 import http from "http";
 import cors from "cors";
-
+import route from "./resource/routes/index.route";
 const port = 8080;
 const app: Express = express();
 
@@ -15,20 +13,10 @@ app.use(
   })
 );
 
-app.get("/videos", (req: Request, res: Response) => {
-  fs.readFile("data.json", "utf8", (err, data) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: "Lỗi đọc tệp tin JSON" });
-      return;
-    }
-    const videosData: { items: Video[] } = JSON.parse(data);
-    res.send(videosData);
-  });
-});
+route(app);
 
 const server = http.createServer(app);
 
-server.listen(8080, () => {
-  console.log("Server is running on port 8080");
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
